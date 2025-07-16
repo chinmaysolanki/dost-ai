@@ -3,10 +3,10 @@ services:
     name: dost-ai
     env: docker
     plan: free
-    dockerfilePath: ./Dockerfile.ai
+    dockerfilePath: ./Dockerfile.openrouter
     healthCheckPath: /health
     envVars:
       - key: PORT
         value: 10000
-      - key: OPENAI_API_KEY
+      - key: OPENROUTER_API_KEY
         sync: false  # This will be set manually in Render dashboard 
