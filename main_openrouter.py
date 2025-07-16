@@ -34,17 +34,19 @@ users: Dict[str, Dict[str, Any]] = {}
 
 # Available models on OpenRouter
 AVAILABLE_MODELS = {
-    "gpt-3.5-turbo": "openai/gpt-3.5-turbo",
+    "gpt-4o-mini": "openai/gpt-4o-mini",
+    "gpt-4o": "openai/gpt-4o",
     "gpt-4": "openai/gpt-4",
-    "gpt-4-turbo": "openai/gpt-4-turbo",
+    "gpt-3.5-turbo": "openai/gpt-3.5-turbo-16k",
     "claude-3-haiku": "anthropic/claude-3-haiku",
     "claude-3-sonnet": "anthropic/claude-3-sonnet",
-    "llama-3-8b": "meta-llama/llama-3-8b-instruct",
-    "gemini-pro": "google/gemini-pro"
+    "llama-3.1-8b": "meta-llama/llama-3.1-8b-instruct",
+    "llama-3.1-70b": "meta-llama/llama-3.1-70b-instruct",
+    "mistral-7b": "mistralai/mistral-7b-instruct"
 }
 
 # Default model (cost-effective)
-DEFAULT_MODEL = "gpt-3.5-turbo"
+DEFAULT_MODEL = "gpt-4o-mini"
 
 # Pydantic models
 class ChatRequest(BaseModel):
@@ -69,16 +71,18 @@ class UserCreate(BaseModel):
 def get_cost_estimate(model: str, tokens: int) -> float:
     """Estimate cost based on model and tokens (approximate)"""
     cost_per_1k_tokens = {
-        "gpt-3.5-turbo": 0.002,
-        "gpt-4": 0.06,
-        "gpt-4-turbo": 0.03,
-        "claude-3-haiku": 0.0015,
-        "claude-3-sonnet": 0.015,
-        "llama-3-8b": 0.0005,
-        "gemini-pro": 0.001
+        "gpt-4o-mini": 0.00015,
+        "gpt-4o": 0.0025,
+        "gpt-4": 0.03,
+        "gpt-3.5-turbo": 0.003,
+        "claude-3-haiku": 0.00025,
+        "claude-3-sonnet": 0.003,
+        "llama-3.1-8b": 0.000015,
+        "llama-3.1-70b": 0.0001,
+        "mistral-7b": 0.000028
     }
     
-    rate = cost_per_1k_tokens.get(model, 0.002)
+    rate = cost_per_1k_tokens.get(model, 0.00015)
     return (tokens / 1000) * rate
 
 def get_ai_response(message: str, model: str = DEFAULT_MODEL, user_context: Dict = None) -> tuple[str, int, str]:
@@ -159,10 +163,10 @@ async def get_models():
         "available_models": AVAILABLE_MODELS,
         "default_model": DEFAULT_MODEL,
         "recommendations": {
-            "fastest": "llama-3-8b",
-            "cheapest": "llama-3-8b", 
-            "best_quality": "gpt-4-turbo",
-            "balanced": "gpt-3.5-turbo"
+            "fastest": "llama-3.1-8b",
+            "cheapest": "llama-3.1-8b", 
+            "best_quality": "gpt-4o",
+            "balanced": "gpt-4o-mini"
         }
     }
 
